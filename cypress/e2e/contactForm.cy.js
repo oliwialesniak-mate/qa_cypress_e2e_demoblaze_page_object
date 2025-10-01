@@ -20,6 +20,12 @@ describe('Contact', () => {
 
   it('should provide the ability to send feedback', () => {
     homePage.clickOnLink('Contact');
+
+    // ensure the modal is open and visible before interacting
+    cy.get('#exampleModal')
+      .should('have.class', 'show')
+      .and('be.visible');
+
     contactForm.typeEmail(testData.email);
     contactForm.typeName(testData.name);
     contactForm.typeMessage(testData.message);
