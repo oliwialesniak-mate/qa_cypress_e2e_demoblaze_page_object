@@ -1,25 +1,30 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import CheckoutPage from '../pages/CheckoutPage';
+
+const checkout = new CheckoutPage();
+
+// Visit page
+Cypress.Commands.add('visitPage', (url) => {
+  checkout.visit(url);
+});
+
+// Add product to cart and assert alert
+Cypress.Commands.add('addProductToCart', (productName) => {
+  cy.window().then((win) => {
+    cy.stub(win, 'alert').as('alert');
+  });
+  checkout.selectLaptop(productName);
+  checkout.addToCart();
+  cy.get('@alert').should('have.been.calledWith', 'Product added');
+});
+
+// Fill order form
+Cypress.Commands.add('fillOrderForm', (formData) => {
+  checkout.fillOrderForm(formData);
+});
+
+// Purchase and confirm modal
+Cypress.Commands.add('purchaseOrder', (expectedName) => {
+  checkout.purchase();
+  checkout.assertModalContains(expectedName);
+  checkout.confirmModal();
+});
