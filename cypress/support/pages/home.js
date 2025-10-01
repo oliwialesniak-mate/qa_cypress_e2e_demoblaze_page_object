@@ -3,17 +3,16 @@ class HomePage {
     cy.visit('https://www.demoblaze.com/');
   }
 
-  clickOnLink(linkText) {
-    cy.get('a').contains(linkText).click(); // ✅ restrict to <a> tags
-  }
-
   clickLaptops() {
-    cy.contains('Laptops').click();
+    cy.get('a').contains('Laptops').click();
   }
 
   selectProduct(productName) {
-    cy.contains(productName).click();
+    cy.get('#tbodyid .card-title').contains(productName).click();
+  }
+
+  clickOnLink(linkText) {
+    cy.get('a').contains(linkText).click();
   }
 }
-
 export default HomePage;

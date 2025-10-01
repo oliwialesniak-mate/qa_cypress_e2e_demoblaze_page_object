@@ -1,17 +1,15 @@
-import PageObject from './pageObject';
-
-class CartPage extends PageObject {
+class CartPage {
   openCart() {
-    cy.contains('Cart').click();
+    cy.get('#cartur').click();
+    cy.url().should('include', 'cart.html');
   }
 
-  assertProduct(productName) {
-    cy.get('tr').contains(productName).should('exist');
+  assertProductInCart(productName) {
+    cy.get('#tbodyid').should('contain.text', productName);
   }
 
-  placeOrder() {
+  clickPlaceOrder() {
     cy.contains('Place Order').click();
   }
 }
-
 export default CartPage;

@@ -1,42 +1,56 @@
-import ProductPage from '../support/pages/product';
+/// <reference types="cypress" />
+
+import HomePage from '../support/pages/home';
 import CartPage from '../support/pages/cart';
 import CheckoutPage from '../support/pages/checkout';
 
-describe('Demoblaze Checkout Flow', () => {
-  const productPage = new ProductPage();
-  const cartPage = new CartPage();
-  const checkoutPage = new CheckoutPage();
+const homePage = new HomePage();
+const cartPage = new CartPage();
+const checkoutPage = new CheckoutPage();
 
-  it('should complete a purchase flow', () => {
-    // Visit homepage
-    cy.visit('https://www.demoblaze.com');
+describe('Checkout Flow', () => {
+  before(() => {
+    homePage.visit();
+  });
 
-    // Select product
-    cy.contains('Laptops').click();
-    productPage.selectProduct('Sony vaio i7');
+  it('should allow user to purchase a Sony vaio i7 laptop', () => {
+    // Navigate using POM
+    homePage.clickLaptops();
+    homePage.selectProduct('Sony vaio i7');
 
-    // Add to cart and assert alert
-    productPage.assertAlert('Product added');
-    productPage.addToCart();
+    // Add to cart and verify alert
+    checkoutPage.addToCart();
+    checkoutPage.assertProductAddedAlert();
 
-    // Go to cart and assert product
+    // Go to cart and assert product is listed
     cartPage.openCart();
-    cartPage.assertProduct('Sony vaio i7');
+    cartPage.assertProductInCart('Sony vaio i7');
 
     // Place order
-    cartPage.placeOrder();
-    checkoutPage.fillForm({
+    cartPage.clickPlaceOrder();
+
+    // ✅ Ensure modal is visible before typing
+    checkoutPage.ensureOrderModalVisible();
+
+    // Fill out form
+    checkoutPage.fillOrderForm({
       name: 'John Doe',
       country: 'USA',
       city: 'New York',
-      card: '1234567890123456',
-      month: '10',
+      card: '4111111111111111',
+      month: '12',
       year: '2025'
     });
 
-    // Purchase and assert modal
+    // Purchase and validate confirmation
     checkoutPage.purchase();
-    checkoutPage.assertModalData('John Doe', '1234567890123456');
-    checkoutPage.confirm();
+
+    checkoutPage.assertConfirmationContains([
+      'John Doe',
+      '4111111111111111'
+    ]);
+
+    // Click OK in confirmation modal
+    checkoutPage.confirmPurchase();
   });
 });

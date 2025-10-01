@@ -1,12 +1,37 @@
-import PageObject from './pageObject';
+class CheckoutPage {
+  addToCart() {
+    cy.contains('Add to cart').click();
+  }
 
-class CheckoutPage extends PageObject {
-  fillForm({ name, country, city, card, month, year }) {
+  assertProductAddedAlert() {
+    cy.on('window:alert', (txt) => {
+      expect(txt).to.contain('Product added');
+    });
+  }
+
+  ensureOrderModalVisible() {
+    cy.get('#orderModal')
+      .should('have.class', 'show')
+      .and('be.visible');
+  }
+
+  fillOrderForm({ name, country, city, card, month, year }) {
+    cy.get('#name').clear();
     cy.get('#name').type(name);
+
+    cy.get('#country').clear();
     cy.get('#country').type(country);
+
+    cy.get('#city').clear();
     cy.get('#city').type(city);
+
+    cy.get('#card').clear();
     cy.get('#card').type(card);
+
+    cy.get('#month').clear();
     cy.get('#month').type(month);
+
+    cy.get('#year').clear();
     cy.get('#year').type(year);
   }
 
@@ -14,13 +39,15 @@ class CheckoutPage extends PageObject {
     cy.contains('Purchase').click();
   }
 
-  assertModalData(name, card) {
-    cy.get('.sweet-alert').should('contain.text', name);
-    cy.get('.sweet-alert').should('contain.text', card);
+  assertConfirmationContains(expectedTexts = []) {
+    cy.get('.sweet-alert').should('be.visible');
+    expectedTexts.forEach((text) => {
+      cy.get('.sweet-alert').should('contain.text', text);
+    });
   }
 
-  confirm() {
-    cy.contains('OK').click();
+  confirmPurchase() {
+    cy.get('.confirm').should('be.visible').click();
   }
 }
 
