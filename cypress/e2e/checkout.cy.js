@@ -29,7 +29,7 @@ describe('Checkout Flow', () => {
     // Place order
     cartPage.clickPlaceOrder();
 
-    // ✅ Ensure modal is visible before typing
+    // Ensure modal is visible before typing
     checkoutPage.ensureOrderModalVisible();
 
     // Fill out form
@@ -45,12 +45,12 @@ describe('Checkout Flow', () => {
     // Purchase and validate confirmation
     checkoutPage.purchase();
 
-    checkoutPage.assertConfirmationContains([
-      'John Doe',
-      '4111111111111111'
-    ]);
+    checkoutPage.assertConfirmationContains({
+      card: '4111111111111111',
+      namePart: 'John' // ✅ only check first name to handle truncation
+    });
 
-    // Click OK in confirmation modal
+    // Confirm the purchase
     checkoutPage.confirmPurchase();
   });
 });

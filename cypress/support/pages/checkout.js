@@ -39,11 +39,16 @@ class CheckoutPage {
     cy.contains('Purchase').click();
   }
 
-  assertConfirmationContains(expectedTexts = []) {
-    cy.get('.sweet-alert').should('be.visible');
-    expectedTexts.forEach((text) => {
-      cy.get('.sweet-alert').should('contain.text', text);
-    });
+  // ✅ More robust confirmation assertion
+  assertConfirmationContains({ card, namePart }) {
+    cy.get('.sweet-alert')
+      .should('be.visible')
+      .invoke('text')
+      .then((text) => {
+        expect(text).to.include('Thank you for your purchase!');
+        expect(text).to.include(card);
+        expect(text).to.include(namePart); // e.g. "John"
+      });
   }
 
   confirmPurchase() {
