@@ -4,7 +4,7 @@ class HomePage {
   }
 
   clickOnLink(linkText) {
-    cy.contains(linkText).click();
+    cy.get('a').contains(linkText).click(); // ✅ restrict to <a> tags
   }
 
   clickLaptops() {
