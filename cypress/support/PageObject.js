@@ -3,9 +3,9 @@ class PageObject {
     cy.visit(url || this.url);
   }
 
-  assertAllert(alertMessage) {
-    cy.on('window:alert', (alert) => {
-      expect(alert).to.eq(alertMessage);
+  assertAlert(expectedMessage) {
+    cy.on('window:alert', (alertText) => {
+      expect(alertText).to.contain(expectedMessage);
     });
   }
 }

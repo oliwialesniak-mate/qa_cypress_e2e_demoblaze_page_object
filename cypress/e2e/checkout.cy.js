@@ -1,17 +1,17 @@
-describe('Demoblaze Checkout Flow with Commands', () => {
-  it('should complete purchase flow', () => {
+describe('Demoblaze Checkout Flow', () => {
+  it('should complete purchase flow using POM', () => {
     cy.visitPage();
 
-    // Navigate to laptops and add Sony vaio i7
-    cy.contains('Laptops').click();
+    // Navigate and add product
+    cy.goToLaptops();
     cy.addProductToCart('Sony vaio i7');
 
-    // Go to cart and assert product
-    cy.contains('Cart').click();
+    // Go to cart
+    cy.goToCart();
     cy.contains('Sony vaio i7').should('be.visible');
 
-    // Place order
-    cy.contains('Place Order').click();
+    // Place order and fill form
+    cy.placeOrder();
     cy.fillOrderForm({
       name: 'John Doe',
       country: 'USA',
@@ -21,7 +21,7 @@ describe('Demoblaze Checkout Flow with Commands', () => {
       year: '2025'
     });
 
-    // Purchase and confirm modal
-    cy.purchaseOrder('John Doe');
+    // Purchase and confirm modal (assert both name & card)
+    cy.purchaseOrder({ name: 'John Doe', card: '1234567890123456' });
   });
 });

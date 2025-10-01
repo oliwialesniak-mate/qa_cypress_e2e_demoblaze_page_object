@@ -1,4 +1,4 @@
-import PageObject from '../PageObject';
+import PageObject from './PageObject';
 
 class CheckoutPage extends PageObject {
   constructor() {
@@ -6,18 +6,18 @@ class CheckoutPage extends PageObject {
     this.url = 'https://www.demoblaze.com';
     this.selectors = {
       laptopsLink: 'Laptops',
-      addToCartBtn: 'Add to cart',
-      cartLink: 'Cart',
+      cartLink: '#cartur',
       placeOrderBtn: 'Place Order',
+      addToCartBtn: 'Add to cart',
+      purchaseBtn: 'Purchase',
+      modal: '.sweet-alert',
+      okBtn: 'OK',
       nameInput: '#name',
       countryInput: '#country',
       cityInput: '#city',
       cardInput: '#card',
       monthInput: '#month',
-      yearInput: '#year',
-      purchaseBtn: 'Purchase',
-      modal: '.sweet-alert',
-      okBtn: 'OK'
+      yearInput: '#year'
     };
   }
 
@@ -34,7 +34,7 @@ class CheckoutPage extends PageObject {
   }
 
   goToCart() {
-    cy.contains(this.selectors.cartLink).click();
+    cy.get(this.selectors.cartLink).click();
   }
 
   placeOrder() {
@@ -54,8 +54,9 @@ class CheckoutPage extends PageObject {
     cy.contains(this.selectors.purchaseBtn).click();
   }
 
-  assertModalContains(text) {
-    cy.get(this.selectors.modal).should('contain.text', text);
+  assertModalContains({ name, card }) {
+    cy.get(this.selectors.modal).should('contain.text', name);
+    cy.get(this.selectors.modal).should('contain.text', card);
   }
 
   confirmModal() {
