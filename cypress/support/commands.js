@@ -1,35 +1,50 @@
-import CheckoutPage from './CheckoutPage';
+import HomePage from '../pages/homePage';
+import ProductPage from '../pages/productPage';
+import CartPage from '../pages/cartPage';
+import CheckoutPage from '../pages/checkoutPage';
 
-const checkout = new CheckoutPage();
+const homePage = new HomePage();
+const productPage = new ProductPage();
+const cartPage = new CartPage();
+const checkoutPage = new CheckoutPage();
 
-// Visit homepage
-Cypress.Commands.add('visitPage', (url) => {
-  checkout.visit(url);
+// Visit home page
+Cypress.Commands.add('visitPage', () => {
+  homePage.visit();
 });
 
-// Add a product to the cart and assert alert
+// Navigate to Laptops
+Cypress.Commands.add('goToLaptops', () => {
+  homePage.clickLaptops();
+});
+
+// Add specific product to cart
 Cypress.Commands.add('addProductToCart', (productName) => {
-  cy.window().then((win) => {
-    cy.stub(win, 'alert').as('alert');
+  homePage.selectProduct(productName);
+  cy.on('window:alert', (txt) => {
+    expect(txt).to.contains('Product added');
   });
-  checkout.selectLaptop(productName);
-  checkout.addToCart();
-  cy.get('@alert').should('have.been.calledWithMatch', /Product added/i);
+  productPage.addToCart();
 });
 
-// Fill the order form
+// Go to cart
+Cypress.Commands.add('goToCart', () => {
+  cartPage.openCart();
+});
+
+// Place order
+Cypress.Commands.add('placeOrder', () => {
+  cartPage.placeOrder();
+});
+
+// Fill order form
 Cypress.Commands.add('fillOrderForm', (formData) => {
-  checkout.fillOrderForm(formData);
+  checkoutPage.fillForm(formData);
 });
 
-// Purchase and confirm modal
+// Purchase and assert modal
 Cypress.Commands.add('purchaseOrder', ({ name, card }) => {
-  checkout.purchase();
-  checkout.assertModalContains({ name, card });
-  checkout.confirmModal();
+  checkoutPage.purchase();
+  checkoutPage.assertModalData(name, card);
+  checkoutPage.confirm();
 });
-
-// Navigate using POM
-Cypress.Commands.add('goToLaptops', () => checkout.goToLaptops());
-Cypress.Commands.add('goToCart', () => checkout.goToCart());
-Cypress.Commands.add('placeOrder', () => checkout.placeOrder());
