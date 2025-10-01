@@ -1,9 +1,11 @@
-class CartPage {
+import PageObject from './pageObject';
+
+class CartPage extends PageObject {
   openCart() {
     cy.contains('Cart').click();
   }
 
-  assertProductInCart(productName) {
+  assertProduct(productName) {
     cy.get('tr').contains(productName).should('exist');
   }
 

@@ -1,4 +1,6 @@
-class CheckoutPage {
+import PageObject from './pageObject';
+
+class CheckoutPage extends PageObject {
   fillForm({ name, country, city, card, month, year }) {
     cy.get('#name').type(name);
     cy.get('#country').type(country);

@@ -1,18 +1,31 @@
+import ProductPage from '../support/pages/product';
+import CartPage from '../support/pages/cart';
+import CheckoutPage from '../support/pages/checkout';
+
 describe('Demoblaze Checkout Flow', () => {
-  it('should complete purchase flow using POM', () => {
-    cy.visitPage();
+  const productPage = new ProductPage();
+  const cartPage = new CartPage();
+  const checkoutPage = new CheckoutPage();
 
-    // Navigate and add product
-    cy.goToLaptops();
-    cy.addProductToCart('Sony vaio i7');
+  it('should complete a purchase flow', () => {
+    // Visit homepage
+    cy.visit('https://www.demoblaze.com');
 
-    // Go to cart
-    cy.goToCart();
-    cy.contains('Sony vaio i7').should('be.visible');
+    // Select product
+    cy.contains('Laptops').click();
+    productPage.selectProduct('Sony vaio i7');
 
-    // Place order and fill form
-    cy.placeOrder();
-    cy.fillOrderForm({
+    // Add to cart and assert alert
+    productPage.assertAlert('Product added');
+    productPage.addToCart();
+
+    // Go to cart and assert product
+    cartPage.openCart();
+    cartPage.assertProduct('Sony vaio i7');
+
+    // Place order
+    cartPage.placeOrder();
+    checkoutPage.fillForm({
       name: 'John Doe',
       country: 'USA',
       city: 'New York',
@@ -21,7 +34,9 @@ describe('Demoblaze Checkout Flow', () => {
       year: '2025'
     });
 
-    // Purchase and confirm modal (assert both name & card)
-    cy.purchaseOrder({ name: 'John Doe', card: '1234567890123456' });
+    // Purchase and assert modal
+    checkoutPage.purchase();
+    checkoutPage.assertModalData('John Doe', '1234567890123456');
+    checkoutPage.confirm();
   });
 });
