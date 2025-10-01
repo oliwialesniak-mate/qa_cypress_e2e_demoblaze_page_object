@@ -1,30 +1,28 @@
-import ContactFormPage from '../support/pages/contactForm';
-import HomePage from '../support/pages/home';
-import { faker } from '@faker-js/faker';
+// cypress/support/pages/contactForm.js
 /// <reference types="cypress" />
 
-const contactForm = new ContactFormPage();
-const homePage = new HomePage();
+class ContactFormPage {
+  typeEmail(email) {
+    cy.get('#recipient-email').type(email);
+  }
 
-const testData = {
-  email: faker.internet.email(),
-  name: faker.person.firstName(),
-  message: faker.lorem.words(),
-  successMessage: 'Thanks for the message!!'
-};
+  typeName(name) {
+    cy.get('#recipient-name').type(name);
+  }
 
-describe('Contact', () => {
-  before(() => {
-    homePage.visit();
-  });
+  typeMessage(message) {
+    cy.get('#message-text').type(message);
+  }
 
-  it('should provide the ability to send feedback', () => {
-    homePage.clickOnLink('Contact');
-    contactForm.typeEmail(testData.email);
-    contactForm.typeName(testData.name);
-    contactForm.typeMessage(testData.message);
-    contactForm.clickOnSendMessageBtn();
+  clickOnSendMessageBtn() {
+    cy.contains('Send message').click();
+  }
 
-    contactForm.assertAlert(testData.successMessage);
-  });
-});
+  assertAlert(expectedText) {
+    cy.on('window:alert', (txt) => {
+      expect(txt).to.contain(expectedText);
+    });
+  }
+}
+
+export default ContactFormPage;
