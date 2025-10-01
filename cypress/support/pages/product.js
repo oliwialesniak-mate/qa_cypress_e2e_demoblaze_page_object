@@ -1,4 +1,4 @@
-import PageObject from './pageObject';
+import PageObject from '../pageObject';
 
 class ProductPage extends PageObject {
   addToCart() {
