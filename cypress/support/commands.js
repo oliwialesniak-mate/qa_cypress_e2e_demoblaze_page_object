@@ -1,7 +1,7 @@
-import HomePage from '../pages/home';
-import ProductPage from '../pages/product';
-import CartPage from '../pages/cart';
-import CheckoutPage from '../pages/checkout';
+import HomePage from './pages/home';
+import ProductPage from './pages/product';
+import CartPage from './pages/cart';
+import CheckoutPage from './pages/checkout';
 
 const homePage = new HomePage();
 const productPage = new ProductPage();
