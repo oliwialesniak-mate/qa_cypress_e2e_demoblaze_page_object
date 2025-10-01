@@ -3,6 +3,10 @@ class HomePage {
     cy.visit('https://www.demoblaze.com/');
   }
 
+  clickOnLink(linkText) {
+    cy.contains(linkText).click();
+  }
+
   clickLaptops() {
     cy.contains('Laptops').click();
   }
