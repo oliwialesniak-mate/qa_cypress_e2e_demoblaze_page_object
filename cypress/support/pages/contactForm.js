@@ -1,17 +1,16 @@
-// cypress/support/pages/contactForm.js
 /// <reference types="cypress" />
 
 class ContactFormPage {
   typeEmail(email) {
-    cy.get('#recipient-email').type(email);
+    cy.get('#recipient-email').should('be.visible').type(email);
   }
 
   typeName(name) {
-    cy.get('#recipient-name').type(name);
+    cy.get('#recipient-name').should('be.visible').type(name);
   }
 
   typeMessage(message) {
-    cy.get('#message-text').type(message);
+    cy.get('#message-text').should('be.visible').type(message);
   }
 
   clickOnSendMessageBtn() {
